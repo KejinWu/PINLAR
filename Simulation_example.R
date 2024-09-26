@@ -53,7 +53,7 @@ Simulate_data = function(burn_in = 5000,data_len = 2000 , Nonlinear_fun = "sin(X
 #' @param Pre_step the prediction horizon.
 #' @param quantiles indicates the nominal confidence-level, i.e., quantiles[2] - quantiles[1].
 #' @param M the number of pseudo values we generate for future variables (e.g., X_{T+1}). Then, the L_2 and L_1 optimal point predictions can be computed.
-#' @param B the number of the forward bootstrap series generated to determine the Pertinent Prediction Interval.
+#' @param B the number of the forward bootstrap series generated to determine the Pertinent Prediction Interval (i.e., the K parameter in the paper)
 #' @param data_len the length of data at hand.
 #' @param burn_in the length of data would be discarded to generate stationary simulated data.
 #' @param Nonlinear_fun the non-linear model form.
