@@ -5,16 +5,16 @@ require(doParallel)
 require(robustbase)
 
 ##########################################################################################  
-# This script show a simple example of predicting a type of NLAR model in the format Nonlinear_fun = "a + log(b + abs(X_0))".
+# This script shows a simple example of predicting a type of NLAR model in the format Nonlinear_fun = "a + log(b + abs(X_0))".
 # L_1 and L_2 optimal point predictions will be generated.
 # The QPI with fitted or predictive residuals will be built.
 # The PPI centered at L_1 or L_2 point predictions with fitted or predictive residuals will be built.
-# The code also provides a way to run replications of simulation studies parallelly, which saves the running time when a large numer of replication is required
+# The code also provides a way to run replications of simulation studies parallelly, which saves the running time when a large number of replication are required.
 
 # WARNING: this script only covers one specific type of NLAR format (i.e., "a + log(b + abs(X_0))"). 
 #          To perform the simulation studies of other NLAR models in the paper, please change the parameter Nonlinear_fun. 
 #          Also, please replcace the command "nls(y~a + log(b^2 + abs(x))"  by other model accordingly. 
-#          Lastly, we should also use other Simulate_data function for other types of NLAR model; all functions to simulate different NLAR model data can be found at a separate R file namely "All_simulated_data"
+#          Lastly, we should also use other Simulate_data functions for other types of NLAR models; all functions to simulate different NLAR model data can be found in a separate R file namely "All_simulated_data"
     
 
 ##########################################################################################  
@@ -52,14 +52,14 @@ Simulate_data = function(burn_in = 5000,data_len = 2000 , Nonlinear_fun = "sin(X
 
 #' @param Pre_step the prediction horizon.
 #' @param quantiles indicates the nominal confidence-level, i.e., quantiles[2] - quantiles[1].
-#' @param M the number of pseudo values we generate for future variable (e.g., X_{T+1}). Then, the L_2 and L_1 optimal point predictions can be computed.
-#' @param B the number of the forward bootstrap series generated to determine Pertinent Prediction Interval.
+#' @param M the number of pseudo values we generate for future variables (e.g., X_{T+1}). Then, the L_2 and L_1 optimal point predictions can be computed.
+#' @param B the number of the forward bootstrap series generated to determine the Pertinent Prediction Interval.
 #' @param data_len the length of data at hand.
 #' @param burn_in the length of data would be discarded to generate stationary simulated data.
 #' @param Nonlinear_fun the non-linear model form.
 #' @param Dis_error the error distribution.
-#' @param residuals_type indicates which residual type will be used to build prediction interval; choices are ""fitted" and "predictive".
-#' @note The output will be the true future simulated value, the bootstrap-based L_1 and L_2 point predictions; the QPI, The PPI centered at L_2 and L_1 optimal point predictions. 
+#' @param residuals_type indicates which residual type will be used to build the prediction interval; choices are "fitted" and "predictive".
+#' @note The output will be the true future simulated value, the bootstrap-based L_1 and L_2 point predictions; the QPI with fitted or predictive residuals, and the PPI centered at L_2 and L_1 optimal point with fitted or predictive residuals predictions. 
 
 # Bootstrap/simulation prediction
 Boot_pre_interval = function(Pre_step = 5, quantiles = c(0.025,0.975), M  = 50000, B = 500, data_len = 2000, burn_in = 5000, Nonlinear_fun = "log(X_0^2)", Dis_error = "rnorm(1)", residuals_type = "fitted"){
@@ -311,17 +311,17 @@ Boot_pre_interval = function(Pre_step = 5, quantiles = c(0.025,0.975), M  = 5000
 
 #' @param Rep the total number of replications we wanted to perform for a simulation study.
 #' @param Pre_step the prediction horizon.
-#' @param residuals_type indicates which residual type will be used to build prediction interval; choices are ""fitted" and "predictive".
+#' @param residuals_type indicates which residual type will be used to build the prediction interval; choices are "fitted" and "predictive".
 #' @param quantiles indicates the nominal confidence-level, i.e., quantiles[2] - quantiles[1].
-#' @param M the number of pseudo values we generate for future variable (e.g., X_{T+1}). Then, the L_2 and L_1 optimal point predictions can be computed.
-#' @param B the number of the forward bootstrap series generated to determine Pertinent Prediction Interval.
+#' @param M the number of pseudo values we generate for future variables (e.g., X_{T+1}). Then, the L_2 and L_1 optimal point predictions can be computed.
+#' @param B the number of the forward bootstrap series generated to determine the Pertinent Prediction Interval.
 #' @param data_len the length of data at hand.
 #' @param burn_in the length of data would be discarded to generate stationary simulated data.
 #' @param Nonlinear_fun the non-linear model form.
 #' @param Dis_error the error distribution.
-#' @param n_core the number of CPU used to run all replications of simulations.
-#' @note The output will all simulation results for all replications.
-#' @note To determin the appropriate value for the parameter n_core, we can use the command detectCores() to find how many CPUs our PCs have.
+#' @param n_core the number of CPUs used to run all replications of simulations.
+#' @note The output will include all simulation results for all replications.
+#' @note To determine the appropriate value for the parameter n_core, we can use the command detectCores() to find how many CPUs our PCs have.
 
 
 Do_replication_parallel = function(Rep = 200,Pre_step = 5,  residuals_type = "fitted", quantiles = c(0.025,0.975), M  = 5000, B = 500, data_len = 2000, burn_in = 5000, Nonlinear_fun = "log(X_0^2)", Dis_error = "rnorm(1)", n_core = 4){
@@ -347,7 +347,7 @@ Do_replication_parallel = function(Rep = 200,Pre_step = 5,  residuals_type = "fi
 
 
 ##########################################################################################
-# Do a single prediction simulation of NLAR model in the format "0.2 + log(0.5 + abs(X_0))"
+# Do a single prediction simulation of the NLAR model in the format "0.2 + log(0.5 + abs(X_0))"
 ##########################################################################################
 
 # With fitted residuals
@@ -364,6 +364,6 @@ test_p = Boot_pre_interval(Pre_step = 5, quantiles = c(0.025,0.975), M  = 5000, 
 
 test_rep = Do_replication_parallel(Rep = 4,Pre_step = 5, ,residuals_type = "fitted", quantiles = c(0.025,0.975), M  = 5000, B = 1000, data_len = 50, burn_in = 1000, Nonlinear_fun = "0.2 + log(0.5 + abs(X_0))", Dis_error = "rnorm(1)",n_core = 4)
 
-# Note: once we have a large number replications, we can compare the performance of different types of PIs by considering the average performance among these replications.
+# Note: once we have a large number of replications, we can compare the performance of different types of PIs by considering the average performance among these replications.
 
 
