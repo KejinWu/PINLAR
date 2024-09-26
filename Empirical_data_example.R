@@ -1,4 +1,7 @@
-
+require(doSNOW)
+require(parallel)
+require(foreach)
+require(doParallel)
 require(astsa) # it contains the used UnempRate data
 
 # Bootstrap/simulation prediction /Empirical analysis
@@ -411,7 +414,7 @@ Run_rolling_prediction_Unemploy = function(Training_window = 100, data_all = NUL
   All_average_PPI_pre_length = matrix(NA,ncol = 5,nrow = Rep)
   
   for (i in c(1:Rep)){
-    print(paste("Do the",i,"th Replication"))
+    print(paste("Do the",i,"th rolling window prediction"))
     train_data = data_all[i:(i+Training_window-1)]
     Pre_res = Boot_pre_Unemploy(Pre_step = H, quantiles = quantiles,  M  = M, B = B, Y = train_data)
     Obes_future =  data_all[(i+Training_window):(i+Training_window+H-1)]
@@ -432,28 +435,22 @@ Run_rolling_prediction_Unemploy = function(Training_window = 100, data_all = NUL
 }
 
 
+# Do data manipulation
 y_u = UnempRate[1:372]
 y_u_q = vector(length = 124)
 for (i in c(1:124)) {
   y_u_q[i] = mean(y_u[((i-1)*3+1):(i*3)])
 }
-
-
-
-plot(y_u_q,type="b",col = 1,cex = 0.7)
-
-
-
 log_linear_detrent <- detrend(log(y_u_q), 5)
-
 plot(log_linear_detrent,type="b",col = 1,cex = 0.7)
 
 
-
+# Do rolling window prediction with window size 50
 Unemploy_EAR = Run_rolling_prediction_Unemploy(Training_window = 50, data_all = log_linear_detrent, H = 5,quantiles = c(0.025,0.975), M  = 200,B = 1000  )
 
 
-
+# Note: the result Unemploy_EAR contains "All_coverage_rate_PI_naive"  "All_coverage_rate_PPI_fit"   "All_coverage_rate_PPI_pre"   "All_average_PI_naive_length" "All_average_PPI_fit_length" 
+# "All_average_PPI_pre_length" for all rolling window predictions. Then, it is easy to apply the function colMeans to get the average performance of each type of PIs. 
 
 
 
