@@ -8,4 +8,5 @@ We consider the prediction inference of the non-linear time series based on boot
 
 ## Note
 I would like to recommend reading **Simulation_example.R** first and then **Empirical_data_example.R**. 
+Feel free to contact me if you have any questions!
 
